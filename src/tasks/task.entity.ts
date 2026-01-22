@@ -1,29 +1,44 @@
-import { from } from "rxjs";
 import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    CreateDateColumn,
-    UpdateDateColumn,
-} from "typeorm";
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+} from 'typeorm';
+import { Project } from '../projects/project.entity';
+
+export enum TaskStatus {
+  TODO = 'todo',
+  IN_PROGRESS = 'in_progress',
+  DONE = 'done',
+}
 
 @Entity()
 export class Task {
-    @PrimaryGeneratedColumn()
-    id : number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    title:string;
+  @Column()
+  title: string;
 
-    @Column ({nullable: true})
-    description:string;
+  @Column({ nullable: true })
+  description: string;
 
-    @Column({default:'todo'})
-    status:string;
+  @Column({
+    type: 'enum',
+    enum: TaskStatus,
+    default: TaskStatus.TODO,
+  })
+  status: TaskStatus;
 
-    @CreateDateColumn()
-    createdAt: Date;
-    
-    @UpdateDateColumn()
-    updatedAt: Date;
+  @ManyToOne(() => Project, { onDelete: 'CASCADE' })
+  project: Project;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
+

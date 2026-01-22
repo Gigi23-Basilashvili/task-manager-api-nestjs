@@ -1,36 +1,52 @@
-import {Controller,Get,Post,Patch,Delete,Param,Body} from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Delete,
+  Param,
+  Body,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { Task } from './task.entity';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
-@Controller('tasks')
+
+
+
+@Controller('projects/:projectId/tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
-  @Get()
-  getAll(): Promise<Task[]> {
-    return this.tasksService.findAll();
-  }
-
-  @Get(':id')
-  getOne(@Param('id') id: string): Promise<Task> {
-    return this.tasksService.findOne(+id);
-  }
-
   @Post()
-  create(@Body() body: { title: string; description?: string }): Promise<Task> {
-    return this.tasksService.create(body.title, body.description);
+  create(
+    @Param('projectId', ParseIntPipe) projectId: number,
+    @Body() body: { title: string; description?: string },
+  ) {
+    return this.tasksService.create(
+      projectId,
+      body.title,
+      body.description,
+    );
   }
 
-  @Patch(':id/status')
-  updateStatus(
-    @Param('id') id: string,
-    @Body() body: { status: string },
-  ): Promise<Task> {
-    return this.tasksService.updateStatus(+id, body.status);
+  @Get()
+  findAll(@Param('projectId', ParseIntPipe) projectId: number) {
+    return this.tasksService.findAllByProject(projectId);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
-    return this.tasksService.remove(+id);
+  @Patch(':taskId')
+  update(
+    @Param('taskId', ParseIntPipe) taskId: number,
+    @Body() body: UpdateTaskDto, 
+  ) {
+    return this.tasksService.update(taskId, body);
+  }
+
+  @Delete(':taskId')
+  remove(@Param('taskId', ParseIntPipe) taskId: number) {
+    return this.tasksService.remove(taskId);
   }
 }
+
+

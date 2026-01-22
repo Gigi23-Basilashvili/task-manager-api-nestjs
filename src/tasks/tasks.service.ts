@@ -1,39 +1,74 @@
-import {Injectable} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Task } from './task.entity';
+import { Project } from '../projects/project.entity';
 
 @Injectable()
 export class TasksService {
-    constructor(
-        @InjectRepository(Task)
-        private taskRepository: Repository<Task>,
-    ){}
+  constructor(
+    @InjectRepository(Task)
+    private readonly taskRepo: Repository<Task>,
 
-    findAll(): Promise<Task[]> {
-        return this.taskRepository.find();
+    @InjectRepository(Project)
+    private readonly projectRepo: Repository<Project>,
+  ) {}
+
+  async create(projectId: number, title: string, description?: string) {
+    const project = await this.projectRepo.findOne({
+      where: { id: projectId },
+    });
+
+    if (!project) {
+      throw new NotFoundException('Project not found');
     }
 
-    async findOne(id: number): Promise<Task> {
-     const task = await this.taskRepository.findOneBy({ id });
-     if (!task) throw new Error('Task not found');
-     return task;
-}
+    const task = this.taskRepo.create({
+      title,
+      description,
+      project,
+    });
 
-  create(title: string, description?: string): Promise<Task> {
-    const task = this.taskRepository.create({ title, description});
-    return this.taskRepository.save(task);
+    return this.taskRepo.save(task);
   }
 
-  async updateStatus(id:number,status:string): Promise<Task>{
-    const task = await this.taskRepository.findOneBy({id});
-    if (!task) throw new Error ('Task Not Found' );
-    task.status=status;
-    return this.taskRepository.save(task);
-  }
-  async remove(id:number):Promise<void>{
-    await this.taskRepository.delete(id);
+  async findAllByProject(projectId: number) {
+    const project = await this.projectRepo.findOne({
+      where: { id: projectId },
+    });
+
+    if (!project) {
+      throw new NotFoundException('Project not found');
+    }
+
+    return this.taskRepo.find({
+      where: { project: { id: projectId } },
+      order: { createdAt: 'DESC' },
+    });
   }
 
-  
+  async update(taskId: number, data: Partial<Task>) {
+    const task = await this.taskRepo.findOne({
+      where: { id: taskId },
+    });
+
+    if (!task) {
+      throw new NotFoundException('Task not found');
+    }
+
+    Object.assign(task, data);
+    return this.taskRepo.save(task);
+  }
+
+  async remove(taskId: number) {
+    const task = await this.taskRepo.findOne({
+      where: { id: taskId },
+    });
+
+    if (!task) {
+      throw new NotFoundException('Task not found');
+    }
+
+    return this.taskRepo.remove(task);
+  }
 }

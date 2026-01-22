@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { ProjectMember } from './project-member.entity';
+import { Task } from '../tasks/task.entity';
 
 @Entity()
 export class Project {
@@ -15,5 +16,7 @@ export class Project {
     updatedAt : Date ;
     @OneToMany(() => ProjectMember, member => member.project)
     members: ProjectMember[];
+     @OneToMany(() => Task, (task) => task.project) 
+    tasks: Task[];
 }
 
