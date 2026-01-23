@@ -26,13 +26,15 @@ export class Task {
   description: string;
 
   @Column({
-    type: 'enum',
+    type: 'simple-enum', 
     enum: TaskStatus,
     default: TaskStatus.TODO,
   })
   status: TaskStatus;
 
-  @ManyToOne(() => Project, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Project, (project) => project.tasks, {
+    onDelete: 'CASCADE',
+  })
   project: Project;
 
   @CreateDateColumn()
@@ -41,4 +43,6 @@ export class Task {
   @UpdateDateColumn()
   updatedAt: Date;
 }
+
+
 

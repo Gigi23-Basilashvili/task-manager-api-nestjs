@@ -56,7 +56,9 @@ export class TasksService {
       throw new NotFoundException('Task not found');
     }
 
+    delete (data as any).id; 
     Object.assign(task, data);
+
     return this.taskRepo.save(task);
   }
 
@@ -72,3 +74,4 @@ export class TasksService {
     return this.taskRepo.remove(task);
   }
 }
+

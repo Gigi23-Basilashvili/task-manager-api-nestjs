@@ -9,10 +9,6 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { UpdateTaskDto } from './dto/update-task.dto';
-
-
-
 
 @Controller('projects/:projectId/tasks')
 export class TasksController {
@@ -38,7 +34,7 @@ export class TasksController {
   @Patch(':taskId')
   update(
     @Param('taskId', ParseIntPipe) taskId: number,
-    @Body() body: UpdateTaskDto, 
+    @Body() body: any,
   ) {
     return this.tasksService.update(taskId, body);
   }
@@ -48,5 +44,6 @@ export class TasksController {
     return this.tasksService.remove(taskId);
   }
 }
+
 
 
