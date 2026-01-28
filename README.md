@@ -1,36 +1,66 @@
-# Task Manager API (NestJS)
+GitHub README – Task Manager API
+Overview
 
-A backend REST API for managing projects and tasks with authentication and role-based permissions.
+The Task Manager API is a backend system built to manage tasks in a clean, secure, and scalable way. It focuses on real-world backend architecture, including authentication, authorization, and relational data modeling.
 
-## Tech Stack
-- NestJS
-- TypeScript
-- TypeORM
-- MySQL
-- JWT Authentication
-- Passport.js
+This project was built to simulate how professional task-based systems (like Jira or Asana) are structured on the server side.
 
-## Features
-- User authentication (JWT)
-- Project creation and management
-- Task CRUD operations
-- Role-based access control (owner / member)
-- Modular, scalable architecture
+What This Project Does
 
-## Modules
-- Auth
-- Users
-- Projects
-- Tasks
-- Permissions
+Allows users to create, read, update, and delete tasks
 
-## Authentication & Authorization
-- JWT-based authentication
-- Protected routes using guards
-- Project-level permissions via join tables
+Groups tasks under projects for better organization
 
-## Getting Started
+Protects all actions using authentication and permissions
 
-### Installation
-```bash
-npm install
+Ensures data consistency using a relational database
+
+Key Features
+
+JWT Authentication – only logged-in users can access protected routes
+
+Permission-Based Authorization – users can only perform allowed actions
+
+Project-Based Task Organization – tasks belong to projects
+
+Clean Modular Architecture – separated controllers, services, DTOs, and entities
+
+Data Validation & Error Handling – prevents invalid or unsafe operations
+
+Tech Stack
+
+NestJS
+
+TypeScript
+
+MySQL
+
+TypeORM
+
+REST APIs
+
+Architecture Overview
+
+Controllers handle incoming HTTP requests
+
+Services contain business logic
+
+DTOs validate incoming data
+
+Entities represent database tables
+
+This structure mirrors production-ready backend systems.
+
+What I Learned
+
+How to structure backend applications cleanly
+
+How authentication and authorization work together
+
+How to model relational data safely
+
+How to debug and solve backend issues using documentation and tooling
+
+Why This Project Matters
+
+This project demonstrates strong backend fundamentals and the ability to design systems that are secure, maintainable, and scalable.
